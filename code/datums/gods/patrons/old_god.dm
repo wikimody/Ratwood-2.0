@@ -12,7 +12,7 @@
 					/obj/effect/proc_holder/spell/invoked/psydonendure			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/psydonrespite			= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/psydefy				= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/psysacrifice			= CLERIC_T4,
+					/obj/effect/proc_holder/spell/invoked/psyspear				= CLERIC_T4,
 	)
 	energy_color = COLOR_PATRON_PSYDON
 	traits_tier = list(TRAIT_PSYDONITE = CLERIC_T1)
@@ -428,4 +428,6 @@
 // giving bonuss stats to psydonians and master polarms, giving negatives to undead and inhumain
 // half effectivnes against tenites, no effect agaisnt psydonians
 // add easter egg on extremly high OCH FUCK metter
-/obj/effect/proc_holder/spell/invoked/psysacrifice
+// Lancea Longini = name
+/obj/effect/proc_holder/spell/invoked/psyspear
+	name = "Hastarius"
