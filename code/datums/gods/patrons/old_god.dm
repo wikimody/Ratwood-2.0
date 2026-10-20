@@ -12,7 +12,7 @@
 					/obj/effect/proc_holder/spell/invoked/psydonendure			= CLERIC_T1,
 					/obj/effect/proc_holder/spell/self/psydonrespite			= CLERIC_T2,
 					/obj/effect/proc_holder/spell/invoked/psydefy				= CLERIC_T3,
-					/obj/effect/proc_holder/spell/invoked/psyspear				= CLERIC_T4,
+					/obj/effect/proc_holder/spell/self/psyspear				= CLERIC_T4,
 	)
 	energy_color = COLOR_PATRON_PSYDON
 	traits_tier = list(TRAIT_PSYDONITE = CLERIC_T1)
@@ -429,5 +429,24 @@
 // half effectivnes against tenites, no effect agaisnt psydonians
 // add easter egg on extremly high OCH FUCK metter
 // Lancea Longini = name
-/obj/effect/proc_holder/spell/invoked/psyspear
+/obj/effect/proc_holder/spell/self/psyspear
 	name = "Hastarius"
+	desc = "I can give a dying person or myself enough strength to ENDURE just a bit longer, to have a chance to leave their mark on the world before their flame goes out. (ONLY USABLE ON PEOPLE IN CRIT / Using it while in crit will self cast)"
+	overlay_icon = 'icons/mob/actions/psydonmiracles.dmi'
+	action_icon = 'icons/mob/actions/psydonmiracles.dmi'
+	overlay_state = "DEFY"
+	releasedrain = 50
+	chargedrain = 0
+	chargetime = 0
+	range = 0
+	warnie = "sydwarning"
+	movement_interrupt = FALSE
+	sound = 'sound/magic/psydonrespite.ogg'
+	invocation_type = "none" // needs to be castable when uncontius
+	associated_skill = /datum/skill/magic/holy
+	antimagic_allowed = FALSE
+	recharge_time = 6 MINUTES
+	miracle = TRUE
+	gesture_required = FALSE
+	devotion_cost = 100
+	cast_without_targets = TRUE
