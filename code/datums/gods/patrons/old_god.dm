@@ -430,23 +430,22 @@
 // add easter egg on extremly high OCH FUCK metter
 // Lancea Longini = name
 /obj/effect/proc_holder/spell/self/psyspear
-	name = "Hastarius"
-	desc = "I can give a dying person or myself enough strength to ENDURE just a bit longer, to have a chance to leave their mark on the world before their flame goes out. (ONLY USABLE ON PEOPLE IN CRIT / Using it while in crit will self cast)"
+	name = "HASTARIUS"
+	desc = "I can sacrifice my limb, either leg or arm, to create a powerfull spear to drive of the unholy. The stronger my will, the stronger the spear will be and the worse my circuimstances, the stronger the spear will shine with my hope."
 	overlay_icon = 'icons/mob/actions/psydonmiracles.dmi'
 	action_icon = 'icons/mob/actions/psydonmiracles.dmi'
-	overlay_state = "DEFY"
-	releasedrain = 50
+	overlay_state = "SYONACRUM" // reuse from lux bolt, the arbalest will never have it anyway
+	releasedrain = 20
 	chargedrain = 0
 	chargetime = 0
 	range = 0
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	sound = 'sound/magic/psydonrespite.ogg'
-	invocation_type = "none" // needs to be castable when uncontius
+	invocation_type = "none"
 	associated_skill = /datum/skill/magic/holy
-	antimagic_allowed = FALSE
-	recharge_time = 6 MINUTES
+	antimagic_allowed = TRUE
+	recharge_time = 15 MINUTES // limit the spear overllaping to minimum
 	miracle = TRUE
 	gesture_required = FALSE
 	devotion_cost = 100
-	cast_without_targets = TRUE
