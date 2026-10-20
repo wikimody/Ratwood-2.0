@@ -438,7 +438,7 @@
 	releasedrain = 20
 	chargedrain = 0
 	chargetime = 0
-	range = 0
+	range = 1
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	sound = 'sound/magic/psydonrespite.ogg'
@@ -450,3 +450,13 @@
 	gesture_required = FALSE
 	devotion_cost = 100
 
+/obj/effect/proc_holder/spell/self/psyspear/cast(list/targets, mob/user = usr)
+	..()
+	if(!ishuman(user))
+		revert_cast()
+		return FALSE
+	var/mob/living/carbon/human/H = user
+	if((H.mob_biotypes & MOB_UNDEAD) || isconstruct(H))
+		to_chat(H, "I need to have living flesh and blood to make into the spear.")
+		revert_cast()
+		return FALSE
