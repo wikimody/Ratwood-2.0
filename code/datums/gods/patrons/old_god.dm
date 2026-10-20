@@ -431,7 +431,7 @@
 // Lancea Longini = name
 /obj/effect/proc_holder/spell/self/psyspear
 	name = "HASTARIUS"
-	desc = "I can sacrifice my limb, either leg or arm, to create a powerfull spear to drive of the unholy. The stronger my will, the stronger the spear will be and the worse my circuimstances, the stronger the spear will shine with my hope."
+	desc = "I can sacrifice my limb, either leg or arm, to create a powerfull spear to drive of the unholy. The stronger my will, the stronger the spear will be and the worse my circuimstances, the more spear will shine with my hope."
 	overlay_icon = 'icons/mob/actions/psydonmiracles.dmi'
 	action_icon = 'icons/mob/actions/psydonmiracles.dmi'
 	overlay_state = "SYONACRUM" // reuse from lux bolt, the arbalest will never have it anyway
@@ -449,3 +449,4 @@
 	miracle = TRUE
 	gesture_required = FALSE
 	devotion_cost = 100
+
