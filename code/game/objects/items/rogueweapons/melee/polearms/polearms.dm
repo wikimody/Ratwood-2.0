@@ -1692,3 +1692,6 @@
 	intent_intdamage_factor = 0.25
 	sharpness_penalty = 2
 	accuracy_modifier = -15
+
+
+/obj/item/rogueweapon/spear/psy_miracle_spear

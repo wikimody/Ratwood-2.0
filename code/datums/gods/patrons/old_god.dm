@@ -577,6 +577,7 @@
 	if(desperation >= 50) // this easter egg terytory, with absurd power. If its regualy acheaved the treshold shoudl be increased or deleted entirly
 		tier = 4
 		to_chat(H, span_yellow("And I can feel the sun rising."))
+		H.apply_status_effect(/datum/status_effect/death_defiance, 3 MINUTES) // have your protag moment
 
 
 /obj/effect/proc_holder/spell/self/psyspear/proc/blood_punish(var/blood_tax, var/mob/living/carbon/human/H)
