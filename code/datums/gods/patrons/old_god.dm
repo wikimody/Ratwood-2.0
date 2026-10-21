@@ -455,8 +455,130 @@
 	if(!ishuman(user))
 		revert_cast()
 		return FALSE
+
 	var/mob/living/carbon/human/H = user
 	if((H.mob_biotypes & MOB_UNDEAD) || isconstruct(H))
 		to_chat(H, "I need to have living flesh and blood to make into the spear.")
 		revert_cast()
 		return FALSE
+	var/def_zone = check_zone(user.zone_selected)
+	var/obj/item/bodypart/affecting = H.get_bodypart(def_zone)
+
+	if(!affecting)
+		revert_cast()
+		return FALSE
+	if(istype(affecting, /obj/item/bodypart/chest) || istype(affecting, /obj/item/bodypart/head))
+		to_chat(H, "I need to select a leg or arm to sacrifice.")
+		revert_cast()
+		return FALSE
+
+	if(affecting.status == BODYPART_ROBOTIC || affecting.skeletonized == TRUE) // not sure if it covers everything
+		to_chat(H, "I need to use living flesh and blood for the spear.")
+		revert_cast()
+		return FALSE
+
+	var/will_scaling = H.STAWIL // the scaling on spear damage and hp
+	var/desperation = 0 // The Im fucked meter. Spear special effects are locked behind it. Im being quite generus here, it exist mostly to avoid precasting
+	var/alone_bonus = 5 // bonus if no other psydonites nearby, meant to help non inqusition folk
+	var/luxmaster = HAS_TRAIT(H, TRAIT_LUX_FREAK)
+
+	if(H.has_status_effect(/datum/status_effect/mood/good)) // good mood bufs will, bad desperation
+		will_scaling += 1
+	if(H.has_status_effect(/datum/status_effect/mood/vgood))
+		will_scaling += 2
+	if(H.has_status_effect(/datum/status_effect/debuff/bleeding)) // bonuses for low blood, both for will and for desperation
+		will_scaling += 1
+	if(H.has_status_effect(/datum/status_effect/debuff/bleedingworse))
+		will_scaling += 2
+	if(H.has_status_effect(/datum/status_effect/debuff/bleedingworst))
+		will_scaling += 3
+
+	if(H.has_status_effect(/datum/status_effect/death_defiance)) // that stacks a lot potentialy, but fits the thememing
+		will_scaling += 2
+		desperation += 5
+	
+	desperation += LAZYLEN(H.get_wounds()) // 1 desperation per wound
+	desperation += LAZYLEN(H.get_embedded_objects()) // 1 desperation per embed
+	desperation = round((H.getBruteLoss() + H.getFireLoss() + H.getToxLoss() + H.getOxyLoss())/50, 1) // 1 desperation per 50 damage
+
+	if(H.get_blood_volume()  <= BLOOD_VOLUME_NORMAL) // +1 per level of blood loss
+		desperation += 1
+	if(H.get_blood_volume()  <= BLOOD_VOLUME_SAFE)
+		desperation += 1
+	if(H.get_blood_volume()  <= BLOOD_VOLUME_OKAY)
+		desperation += 1
+	if(H.get_blood_volume()  <= BLOOD_VOLUME_BAD)
+		desperation += 1
+	if(H.get_blood_volume()  <= BLOOD_VOLUME_SURVIVE)
+		desperation += 1
+
+	desperation += LAZYLEN(H.get_missing_limbs()) // 1 per lost limb other then the one we sack
+	desperation += LAZYLEN(H.get_disabled_limbs()) // 1 per disibled limb other then the one we sack
+
+	if(H.has_status_effect(/datum/status_effect/mood/bad)) // good mood bufs will, bad desperation
+		desperation += 1
+	if(H.has_status_effect(/datum/status_effect/mood/vbad))
+		desperation += 2
+
+	if(H.handcuffed) // you can technicly use this miracle to get out of those, at a cost of a limb
+		desperation += 2
+	if(H.legcuffed)
+		desperation += 2
+	
+	for(var/mob/living/scary in range(11, H)) // thats the big one, thankfully its very rare to use. Big range to include ranged attackers
+		if(istype(scary, /mob/living/simple_animal/hostile)) // hostile npc
+			desperation += 1
+		else if (ishuman(scary))
+			var/mob/living/carbon/human/scary_man
+			if(scary_man.stat) // dead or crited people, means bad news
+				desperation += 1
+			if(!scary_man.mind) //mindless means npc and most are hostile
+				desperation += 1
+			if(istype(scary_man.patron, /datum/patron/inhumen)) // ascendant worshipers, bad news
+				desperation += 1
+				if(scary_man.devotion) // ascendant miraclists, very bad news
+					desperation += 1
+			if(istype(scary_man.patron, /datum/patron/old_god) && !scary_man.stat) // functioning fellow psydonites
+				alone_bonus -= 1
+			if(HAS_TRAIT(scary_man, TRAIT_SILVER_WEAK)) // vampires or scieletons or werwolf
+				desperation += 1
+			if(scary_man.dna?.species?.type == /datum/species/gnoll) // self explanatory?
+				desperation += 2
+			var/special = LOWER_TEXT("[H.mind?.special_role]")
+			if(special == "dreamwalker" || special == "assassin" || special == "werewolf")
+				desperation += 2 // a bit more for semi major antag
+			if(special == "bandit" || special == "peasant rebel")
+				desperation += 1 // a cut above any standard mathiosian
+			if(special == "vampire")
+				desperation += 2 // semi mass producable, but scary
+			if(special == "lich" || special == "vampire lord")
+				desperation += 10 // hahahhahah, you need it, you need it yesterday
+		
+	if(alone_bonus > 0)
+		desperation += alone_bonus
+
+	var/blood_tax = -400 + 20 * desperation // 20 or above desperation stacks will increse your blood instead
+	var/timed = luxmaster ? 20 MINUTES : 15 MINUTES // extra duration for absolver and stigmata
+	addtimer(CALLBACK(src, PROC_REF(blood_punish), blood_tax, H), 10 SECONDS) // time to trow it to somone before you go down (or rise)
+	H.visible_message(span_boldwarning("[H]'s [affecting] suddently falls away, transforming into a spear like combination of flesh, bone and lux."), span_userdanger("I sacrificed [affecting] turning it into a weapon to strike back the darkness."))
+	H.emote("painscream")
+	affecting.drop_limb()
+	qdel(affecting)
+	var/tier = 0
+	if(desperation >= 5)
+		tier = 1
+		to_chat(H, span_yellow("The darkness is closing in."))
+	if(desperation >= 10)
+		tier = 2
+		to_chat(H, span_yellow("I feel it all around me, trying to break any will I have left to resist it."))
+	if(desperation >= 15)
+		tier = 3
+		to_chat(H, span_yellow("Yet night is always darkest right before the dawn."))
+	if(desperation >= 50) // this easter egg terytory, with absurd power. If its regualy acheaved the treshold shoudl be increased or deleted entirly
+		tier = 4
+		to_chat(H, span_yellow("And I can feel the sun rising."))
+
+
+/obj/effect/proc_holder/spell/self/psyspear/proc/blood_punish(var/blood_tax, var/mob/living/carbon/human/H)
+	H.adjust_blood_volume(blood_tax)
+
