@@ -332,6 +332,81 @@
 	. = ..()
 	to_chat(owner, span_warning("My vision returns...!"))
 
+/obj/item/ammo_casing/caseless/bullet/lead/runelock/heavy
+	name = "heavy runed sphere"
+	desc = "You shoudnt be seeing this."
+	projectile_type = /obj/projectile/bullet/firearm/lead/runelock/heavy
+	caliber = "runed_sphere"
+	icon_state = "musketball_runed"
+	max_integrity = 0
+
+/obj/projectile/bullet/firearm/lead/runelock/heavy // only shot by the rifle
+	name = "heavy runed sphere"
+	desc = "You shoudnt be seeing this."
+	damage = 50
+	speed = 0.7
+	icon_state = "musketball_runed"
+	max_range = 13
+	range = 15
+	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
+	ammo_type = /obj/item/ammo_casing/caseless/bullet/lead/runelock
+	damage_type = BRUTE
+	armor_penetration = PEN_HEAVY
+
+
+/obj/item/ammo_casing/caseless/bullet/lead/runelock/heavy/entropy
+	name = "sphere of entropy"
+	desc = "Looking at the complex runework on this sphere makes you feel somehow lesser."
+	projectile_type = /obj/projectile/bullet/firearm/lead/runelock/heavy/entropy
+	caliber = "runed_sphere"
+	icon_state = "musketball_blessed"
+
+/obj/projectile/bullet/firearm/lead/runelock/heavy/entropy
+	name = "entrophy sphere"
+	desc = "You feel lesser for even gazing at this."
+	damage = 60 // 120 with the rifle mod
+	icon_state = "musketball_blessed"
+	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
+	ammo_type = /obj/item/ammo_casing/caseless/bullet/lead/runelock/heavy/entropy
+	armor_penetration = PEN_HEAVY
+	silver = TRUE
+	blessed = TRUE
+
+/obj/projectile/bullet/firearm/lead/runelock/on_hit(atom/target, blocked = FALSE)
+	if(ishuman(target))
+		var/mob/living/carbon/human/L = target
+		L.stamina_add(50)
+		L.energy_add(-450) // around 3 bulets to remove a blue bar
+		if(L.devotion)
+			L.devotion.update_devotion(-500) // half of T4 clerics
+		if(L.bloodpool)
+			L.adjust_bloodpool(-500) // half a normal vampire vita
+		to_chat(L, span_danger("You feel your energy rapidly drain away!"))
+		
+		
+/obj/item/ammo_casing/caseless/bullet/lead/runelock/heavy/tracker
+	name = "mark"
+	desc = "A highly specialised and expensive tracking sphere. Victim will bleed silvery blood as they escape, and will bleed more as they move around. Undead bones will be ground instead if they happen to be shot."
+	projectile_type = /obj/projectile/bullet/firearm/lead/runelock/heavy/tracker
+	caliber = "runed_sphere"
+	icon_state = "musketball_silver"
+
+/obj/projectile/bullet/firearm/lead/runelock/heavy/tracker
+	name = "mark"
+	desc = "You wont escape the hunters mark."
+	damage = 40 // 80 with the rifle mod
+	icon_state = "musketball_silver"
+	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
+	ammo_type = /obj/item/ammo_casing/caseless/bullet/lead/runelock/heavy/tracker
+	armor_penetration = PEN_BSTEEL // we want this to go though no mater what
+	silver = TRUE
+	blessed = TRUE
+
+/obj/projectile/bullet/firearm/lead/runelock/heavy/tracker/on_hit(atom/target, blocked = FALSE)
+	if(ishuman(target))
+		var/mob/living/carbon/human/L = target
+
+
 /obj/item/quiver/twilight_bullet/runicbag
 	name = "pharetra"
 	desc = "A leather pouch designed to store runic bullets. The rune inscribed on the lock binds to the ammunition stored inside, and upon activation, returns spent runic bullets to the pouch for reuse."

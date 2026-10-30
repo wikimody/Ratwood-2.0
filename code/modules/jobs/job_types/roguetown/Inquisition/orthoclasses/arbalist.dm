@@ -148,3 +148,30 @@
 		var/obj/item/ammo_casing/caseless/rogue/heavy_bolt/holy/K = new()
 		stakes += K
 	update_icon()
+
+/obj/item/quiver/storage/belt/rogue/leather/arbalest_bullet
+	name = "entropic sphere belt"
+	desc = "Belt containg very specialised entropic spheres, whose runes are to energy hungry to be shot from anything less then a rifle."
+	component_type = /datum/component/storage/concrete/roguetown/belt/knife_belt
+	icon_state = "blackknife"
+	item_state = "blackknife"
+	var/max_storage = 6
+	var/selected_type = /obj/item/ammo_casing/caseless/bullet/lead/runelock // what the pouch is currently attuned to
+	var/list/linked_ammo_types = list() // types the casings report on firing
+	var/list/linked_casings = list()    // every live casing linked to this bag, in or out of it
+
+/obj/item/quiver/storage/belt/rogue/leather/arbalest_bullet/attackby(obj/A, loc, params)
+	if(A.type in typesof(/obj/item/ammo_casing/caseless/rogue/heavy_bolt/holy))
+		if(stakes.len < max_storage)
+			if(ismob(loc))
+				var/mob/M = loc
+				M.doUnEquip(A, TRUE, src, TRUE, silent = TRUE)
+			else
+				A.forceMove(src)
+			stakes += A
+			update_icon()
+			to_chat(usr, span_notice("I discreetly slip [A] into [src]."))
+		else
+			to_chat(loc, span_warning("Full!"))
+		return
+	..()
