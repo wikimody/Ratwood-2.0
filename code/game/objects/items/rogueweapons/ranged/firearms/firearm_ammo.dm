@@ -352,14 +352,14 @@
 	name = "heavy runed sphere"
 	desc = "You shoudnt be seeing this."
 	damage = 50
-	speed = 0.7
+	speed = 0.4 
 	icon_state = "musketball_runed"
-	max_range = 13
-	range = 15
+	max_range = 20 // be a sniper you alwys wished to be
+	range = 25
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
-	ammo_type = /obj/item/ammo_casing/caseless/bullet/lead/runelock
+	ammo_type = /obj/item/ammo_casing/caseless/bullet/lead/runelock/heavy
 	damage_type = BRUTE
-	armor_penetration = PEN_HEAVY
+	armor_penetration = PEN_BSTEEL
 
 
 /obj/item/ammo_casing/caseless/bullet/lead/runelock/heavy/entropy
@@ -376,7 +376,7 @@
 	icon_state = "musketball_blessed"
 	hitsound = 'sound/combat/hits/hi_bolt (2).ogg'
 	ammo_type = /obj/item/ammo_casing/caseless/bullet/lead/runelock/heavy/entropy
-	armor_penetration = PEN_HEAVY
+	armor_penetration = PEN_BSTEEL
 	silver = TRUE
 	blessed = TRUE
 
@@ -387,11 +387,11 @@
 		L.energy_add(-450) // around 3 bulets to remove a blue bar
 		if(L.devotion)
 			L.devotion.update_devotion(-500) // half of T4 clerics
-		if(L.bloodpool)
+		if(L.get_bloodpool())
 			L.adjust_bloodpool(-500) // half a normal vampire vita
 		to_chat(L, span_danger("You feel your energy rapidly drain away!"))
 		
-		
+
 /obj/item/ammo_casing/caseless/bullet/lead/runelock/heavy/tracker
 	name = "mark"
 	desc = "A highly specialised and expensive tracking sphere. Victim will bleed silvery blood as they escape, and will bleed more as they move around. Undead bones will be ground instead if they happen to be shot."
@@ -413,6 +413,41 @@
 /obj/projectile/bullet/firearm/lead/runelock/heavy/tracker/on_hit(atom/target, blocked = FALSE)
 	if(ishuman(target))
 		var/mob/living/carbon/human/L = target
+		L.apply_effect(/datum/status_effect/debuff/arbalest_hunt)
+
+/atom/movable/screen/alert/status_effect/debuff/arbalest_hunt
+	name = "Hunters Mark"
+	desc = "This powder is killing my eyes and body. I barely can see and move..."
+	icon = 'icons/mob/screen_alert.dmi'
+	icon_state = "embed"
+
+/datum/status_effect/debuff/arbalest_hunt
+	id = "runed_poison"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/arbalest_hunt
+	effectedstats = list(STATKEY_CON = -2, STATKEY_WIL = -2)
+	duration = 5 MINUTES
+
+/datum/status_effect/debuff/arbalest_hunt/on_apply()
+	. = ..()
+	register_move(owner)
+
+/datum/status_effect/debuff/arbalest_hunt/on_remove()
+	. = ..()
+	unregister_move(owner)
+
+/datum/status_effect/debuff/arbalest_hunt/proc/handle_move(mob/living/carbon/human/H)
+
+/datum/status_effect/debuff/arbalest_hunt/proc/handle_move_init(datum/source)
+	SIGNAL_HANDLER
+	if(source != owner)
+		return FALSE
+	return handle_move(source)
+
+/datum/component/debuff/arbalest_hunt/proc/register_move(mob/living/carbon/human/H)
+	RegisterSignal(H, COMSIG_MOVABLE_MOVED, PROC_REF(on_wearer_moved))
+
+/datum/component/debuff/arbalest_hunt/proc/unregister_move(mob/living/carbon/human/H)
+	UnregisterSignal(H, COMSIG_MOVABLE_MOVED)
 
 
 /obj/item/quiver/twilight_bullet/runicbag
