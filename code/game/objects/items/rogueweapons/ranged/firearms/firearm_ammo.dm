@@ -444,7 +444,7 @@
 	return handle_move(source)
 
 /datum/component/debuff/arbalest_hunt/proc/register_move(mob/living/carbon/human/H)
-	RegisterSignal(H, COMSIG_MOVABLE_MOVED, PROC_REF(on_wearer_moved))
+	RegisterSignal(H, COMSIG_MOVABLE_MOVED, PROC_REF(handle_move_init))
 
 /datum/component/debuff/arbalest_hunt/proc/unregister_move(mob/living/carbon/human/H)
 	UnregisterSignal(H, COMSIG_MOVABLE_MOVED)
