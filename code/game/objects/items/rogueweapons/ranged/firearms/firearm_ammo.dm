@@ -424,7 +424,7 @@
 /datum/status_effect/debuff/arbalest_hunt
 	id = "runed_poison"
 	alert_type = /atom/movable/screen/alert/status_effect/debuff/arbalest_hunt
-	effectedstats = list(STATKEY_CON = -2, STATKEY_WIL = -2)
+	effectedstats = list(STATKEY_CON = -2, STATKEY_WIL = -2, STATKEY_SPD = -2)
 	duration = 5 MINUTES
 
 /datum/status_effect/debuff/arbalest_hunt/on_apply()
