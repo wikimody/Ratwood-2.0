@@ -3,7 +3,7 @@
 	domain = "Life, Creation, Compassion and Perseverance"
 	desc = "The One arrived to PSYDONIA on the COMET SYON, reshaping the barren world in His image. He was struck down by the Necromantress Zizo; some believe Him dead, others slumbering. May we ENDURE in His name."
 	worshippers = "Ancient Dwarves and Elves, Zybantines, Otavans, Those Who Dream of Peace"
-	virtues = "Peace, Resilience, Stubbornness"
+	virtues = "Compassion, Piety, Brotherhood"
 	sins = "Witchcraft, Sadism, Overindulgence"
 	associated_faith = /datum/faith/old_god
 	mob_traits = list(TRAIT_PSYDONIAN_GRIT)
@@ -184,7 +184,7 @@
 
 		// Bonuses! Flavour! SOVL!
 		for(var/obj/item/clothing/neck/current_item in target.get_equipped_items(TRUE))
-			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/decrepit, /obj/item/clothing/neck/roguetown/psicross/silver,	/obj/item/clothing/neck/roguetown/psicross/g))
+			if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/decrepit, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/silver/sojourner,	/obj/item/clothing/neck/roguetown/psicross/g))
 				pp += 1
 				if(pp >= 12 & target == user) // A harmless easter-egg. Only applies on self-cast. You'd have to be pretty deliberate to wear 12 of them.
 					target.visible_message(span_danger("[target]'s many psycrosses reverberate with a strange, ephemeral sound..."), span_userdanger("HE must be waking up! I can hear it! I'm ENDURING so much!"))
@@ -209,7 +209,7 @@
 						psicross_bonus = 0.2
 					if(/obj/item/clothing/neck/roguetown/psicross)
 						psicross_bonus = 0.3
-					if(/obj/item/clothing/neck/roguetown/psicross/silver)
+					if(/obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/silver/sojourner)
 						psicross_bonus = 0.4
 					if(/obj/item/clothing/neck/roguetown/psicross/g) // PURITY AFLOAT.
 						psicross_bonus = 0.4
@@ -263,10 +263,10 @@
 	range = 7
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
-	sound = 'sound/magic/ENDVRE.ogg'
+	sound = 'sound/magic/psydonrespite.ogg'
 	invocation_type = "none" // needs to be castable when uncontius
 	associated_skill = /datum/skill/magic/holy
-	antimagic_allowed = FALSE
+	antimagic_allowed = TRUE
 	recharge_time = 6 MINUTES
 	miracle = TRUE
 	stat_allowed = TRUE // Has a specific check for the dead, crit people can still self-cast

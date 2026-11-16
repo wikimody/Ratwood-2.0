@@ -65,11 +65,11 @@
 	var/datum/looping_sound/psydonmusicboxsound/soundloop
 
 /obj/item/psydonmusicbox/examine(mob/user)
-	. = ..()
-	if(HAS_TRAIT(usr, TRAIT_INQUISITION))
+	if(HAS_TRAIT(user, TRAIT_INQUISITION))
 		desc = "A relic from the bowels of the Otavan cathedral's thaumaturgical workshops. Fourteen souls of heretics, all bound together, they will scream and protect us from magicks. It would be wise to not teach the heretics of its true nature, to only bring it to bear in dire circumstances."
 	else
 		desc = "A cranked music box, it has the seal of the Otavan Inquisition on the side. It carries a somber feeling to it..."
+	. = ..()
 
 /obj/item/psydonmusicbox/attack_self(mob/living/user)
 	. = ..()
@@ -352,8 +352,7 @@ Inquisitorial armory down here
 			on = TRUE
 			update_brightness()
 			//force = on_damage
-			if(soundloop)
-				soundloop.start()
+			update_point_ambience()
 			if(ismob(loc))
 				var/mob/M = loc
 				M.update_inv_hands()
@@ -370,8 +369,6 @@ Inquisitorial armory down here
 
 /obj/item/flashlight/flare/torch/lantern/psycenser/turn_off()
 	playsound(src.loc, 'sound/items/censer_off.ogg', 100)
-	if(soundloop)
-		soundloop.stop()
 	STOP_PROCESSING(SSobj, src)
 	..()
 	if(ismob(loc))

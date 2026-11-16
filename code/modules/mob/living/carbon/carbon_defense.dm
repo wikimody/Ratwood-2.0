@@ -66,7 +66,7 @@
 										"<span class='danger'>I catch [I] in mid-air!</span>")
 						throw_mode_off()
 						return 1
-	..()
+	return ..()
 
 
 /mob/living/carbon/check_projectile_wounding(obj/projectile/P, def_zone, blocked)
@@ -85,8 +85,7 @@
 	if(newdam <= 8)
 		return FALSE
 	if(prob(P.embedchance) && P.dropped)
-		BP.add_embedded_object(P.dropped, silent = FALSE, crit_message = TRUE)
-		return TRUE
+		return BP.add_embedded_object(P.dropped, silent = FALSE, crit_message = TRUE)
 	return FALSE
 
 /mob/living/carbon/send_pull_message(mob/living/target)
@@ -108,8 +107,9 @@
 						span_userdanger("[src] grabs me!"), span_hear("I hear shuffling."), null, src)
 		to_chat(src, span_danger("I grab [target]."))
 
-	if(used_limb && target.client && target.hud_used && target.hud_used.zone_select)
-		var/atom/movable/screen/zone_sel/zone_sel = target.hud_used.zone_select
+	var/atom/movable/screen/zone_sel/zone_sel = target.client ? target.hud_used?.zone_select : null
+	// used_limb defaults to the chest even without a grab item. Reading sublimb_grabbed requires I
+	if(I && zone_sel)
 		zone_sel.flash_limb(I.sublimb_grabbed, "#d19e13") // grab = orange
 
 /mob/living/carbon/send_grabbed_message(mob/living/carbon/user)

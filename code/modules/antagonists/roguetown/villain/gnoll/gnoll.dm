@@ -155,7 +155,7 @@
 	return "Tracked: [target_display]"
 
 /mob/living/carbon/human/proc/gnoll_can_feed_heal()
-	if(has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder) || has_status_effect(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed))
+	if(is_burning_with(/datum/status_effect/fire_handler/fire_stacks/sunder) || is_burning_with(/datum/status_effect/fire_handler/fire_stacks/sunder/blessed))
 		to_chat(src, span_notice("My power is weakened, I cannot heal!"))
 		return FALSE
 	return TRUE
@@ -221,6 +221,7 @@
 	icon_state = "insmash"
 	chargetime = 1
 	penfactor = PEN_NONE
+	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
 
 /datum/intent/simple/gnoll_cut
 	name = "chopping claw"
@@ -241,6 +242,7 @@
 
 /datum/intent/mace/strike/gnoll
 	name = "armor rending strike"
+	intent_intdamage_factor = BLUNT_DEFAULT_INT_DAMAGEFACTOR
 	miss_text = "strikes the air!"
 	miss_sound = "bluntwooshlarge"
 	attack_verb = list("punches", "strikes", "tears")
